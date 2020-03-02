@@ -17,6 +17,8 @@
 ### END INIT INFO
 
 # Written by Alexander Rumyantsev
+# https://github.com/thedolphin/monitor.pl/blob/master/etc/init.d/monitor
+
 
 # Source function library.
 . /etc/rc.d/init.d/functions
