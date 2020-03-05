@@ -1,2 +1,8 @@
+инициализация настроек /etc/systemd/system.conf  
+  правка :
+    
+для правки вывода cgtop [здесь](https://habr.com/ru/company/redhatrussia/blog/424367/)  
+ а также правка 
+
 установка jira [здесь](https://gist.github.com/ryanvin/5ab0278b5ce3253742b0ba5d918c5fc8)  
 unit для atlassian [здесь](https://confluence.atlassian.com/jirakb/run-jira-as-a-systemd-service-on-linux-979411854.html)  
