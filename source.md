@@ -3,6 +3,7 @@ Beginner
 2. [pikabu](https://pikabu.ru/story/systemd_dlya_samyikh_malenkikh_chast_i_znakomstvo_4285483)  
 3. man systemd [RUS](https://www.opennet.ru/man.shtml?topic=systemd&category=1&russian=0)  
 4. Hackware systemd [RUS](https://hackware.ru/?p=5460)  
+5. system.d [[RUS]] (https://wiki.archlinux.org/index.php/Systemd_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)#%D0%A2%D0%B8%D0%BF%D1%8B_%D1%81%D0%BB%D1%83%D0%B6%D0%B1)  
 
 Advanced  
 1. [man systemd](http://0pointer.de/blog/projects/systemd-docs.html)   
