@@ -15,3 +15,4 @@ Advanced
 5. [FAQ](https://www.freedesktop.org/wiki/Software/systemd/FrequentlyAskedQuestions/)
 6. [cheat sheet](https://fedoraproject.org/wiki/SysVinit_to_Systemd_Cheatsheet)
 7. systemd [[RUS]](http://www2.kangran.su/~nnz/pub/s4a/s4a_latest.pdf)  
+8. управление  cgroups(https://access.redhat.com/documentation/ru-ru/red_hat_enterprise_linux/6/html-single/resource_management_guide/index)  
