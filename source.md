@@ -13,4 +13,5 @@ Advanced
 3. [fedora systemd](https://fedoraproject.org/wiki/Features/systemd)  
 4. [cgroups](https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt)  
 5. [FAQ](https://www.freedesktop.org/wiki/Software/systemd/FrequentlyAskedQuestions/)
-6. [cheat sheet](https://fedoraproject.org/wiki/SysVinit_to_Systemd_Cheatsheet)  
+6. [cheat sheet](https://fedoraproject.org/wiki/SysVinit_to_Systemd_Cheatsheet)
+7. systemd [[RUS]](http://www2.kangran.su/~nnz/pub/s4a/s4a_latest.pdf)  
