@@ -14,7 +14,7 @@ systemctl set-property jira.service CPUQuota=40%
 ```
 Memory можно ограничить либо строкой в unit либо строкой в скрипте запуска
 ```
-[Unit]
+[Service]
 MemoryLimit=140M
 ```
 or
@@ -28,4 +28,8 @@ CPU
 ```
 systemctl set-property jira.service CPUQuota=20%
 ```
-
+TASKS
+```
+[Service]
+TasksMax=2
+```
