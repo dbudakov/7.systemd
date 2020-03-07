@@ -12,7 +12,20 @@ limits
 ```
 systemctl set-property jira.service CPUQuota=40%   
 ```
-mem
+Memory можно ограничить либо строкой в unit либо строкой в скрипте запуска
 ```
-/sys/fs/cgroup/memory/system.slice/jira.service/memory.limit_in_bytes
+[Unit]
+MemoryLimit=140M
 ```
+or
+```
+#!/bin/bash
+...
+echo 140000000 > /sys/fs/cgroup/memory/system.slice/jira.service/memory.limit_in_bytes
+...
+```
+CPU 
+```
+systemctl set-property jira.service CPUQuota=20%
+```
+
