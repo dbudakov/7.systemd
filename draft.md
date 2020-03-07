@@ -33,3 +33,8 @@ TASKS
 [Service]
 TasksMax=2
 ```
+Slice
+```
+Slice=user-1000.slice
+```
+
