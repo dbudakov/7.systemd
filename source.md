@@ -5,7 +5,7 @@ Beginner
 4. Hackware systemd [RUS](https://hackware.ru/?p=5460)  
 5. system.d [[RUS]](https://wiki.archlinux.org/index.php/Systemd_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)#%D0%A2%D0%B8%D0%BF%D1%8B_%D1%81%D0%BB%D1%83%D0%B6%D0%B1)  
 6. Борьба за ресурсы habr[[RUS]](https://habr.com/ru/company/redhatrussia/blog/423051/)  
-7. system.d resource RHEL [hier](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/resource_management_guide/sec-modifying_control_groups)  
+
 
 
 Advanced  
@@ -16,4 +16,5 @@ Advanced
 5. [FAQ](https://www.freedesktop.org/wiki/Software/systemd/FrequentlyAskedQuestions/)
 6. [cheat sheet](https://fedoraproject.org/wiki/SysVinit_to_Systemd_Cheatsheet)
 7. systemd [[RUS]](http://www2.kangran.su/~nnz/pub/s4a/s4a_latest.pdf)  
-8. управление системными ресурсами [[RUS]](https://access.redhat.com/documentation/ru-ru/red_hat_enterprise_linux/6/html-single/resource_management_guide/index)   
+8. управление системными ресурсами RHEL [[RUS]](https://access.redhat.com/documentation/ru-ru/red_hat_enterprise_linux/6/html-single/resource_management_guide/index)   
+9. resource RHEL [[EN]](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/resource_management_guide/sec-modifying_control_groups)  
