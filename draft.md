@@ -37,4 +37,11 @@ Slice
 ```
 Slice=user-1000.slice
 ```
-
+Restart
+```
+Restart=always
+```
+pid
+```
+systemd-cgls |awk -F"─" '/\/opt\/atlassian\/jira\//{print $2 }'|awk '{print $1}'
+```
