@@ -10,5 +10,9 @@ unit для atlassian [здесь](https://confluence.atlassian.com/jirakb/run-j
 
 limits  
 ```
-systemctl set-property jira.service CPUQuota=40%  
+systemctl set-property jira.service CPUQuota=40%   
+```
+mem
+```
+/sys/fs/cgroup/memory/system.slice/jira.service/memory.limit_in_bytes
 ```
