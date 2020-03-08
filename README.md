@@ -82,7 +82,7 @@ WantedBy=multi-user.target
 ln -s /lib/systemd/system/watchlog.service /etc/systemd/system/multi-user.target.wants/
 ln -s /lib/systemd/system/watchlog.timer /etc/systemd/system/multi-user.target.wants/
 ```
-По мониторингу строки всё, можно перезагружать VM логинится и примерно через минуту в журнале появится соответствующая запись
+По проверки лога всё, можно перезагружать VM логинится и примерно через минуту в журнале с небольшим промежутком будет появлятся соответствующая запись
 ```
 journalctl|tail
 --- 
