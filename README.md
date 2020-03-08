@@ -128,4 +128,7 @@ Listen 8008
 ln -s /lib/systemd/system/httpd@first.service /etc/systemd/system/multi-user.target.wants/
 ln -s /lib/systemd/system/httpd@second.service /etc/systemd/system/multi-user.target.wants/
 ```
-
+по настройки httpd в двойном окружении всё, можно грузить VM и проверять работу служб
+```
+ ss -tnulp | grep httpd
+```
