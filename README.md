@@ -132,3 +132,42 @@ ln -s /lib/systemd/system/httpd@second.service /etc/systemd/system/multi-user.ta
 ```
  ss -tnulp | grep httpd
 ```
+
+#### 3. Установка jira(java app), ограничение ресурсов
+скачиваем и устанавливаем только клиент jira
+```
+yum install wget -y
+mkdir /opt/src ; cd /opt/src
+wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-8.7.1-x64.bin
+chmod 755 /opt/src/jira*     
+/opt/src/jira*
+```
+создаем юнит и ограничиваем его по нескольким параметрам, а также ставим параметр рестарта в режиме "always", чтобы служба самостоятельно перезапускалась, при некорректном её выключении, автостарт не сработает только в случае корректной остановки службы через `systemctl stop jira.service`
+```
+[Unit]
+Description=Atlassian Jira                        # описание юнита
+After=network.target                              # условия загрузки, после сетевых служб
+
+[Service]
+Type=forking                                      # задаем тип форкинг, процесс создающий др. процессы
+User=jira                                         # пользователь
+PIDFile=/opt/atlassian/jira/work/catalina.pid     # пид файл
+ExecStart=/opt/atlassian/jira/bin/start-jira.sh   # скрипт запуска приложения
+ExecStop=/opt/atlassian/jira/bin/stop-jira.sh     # скрипт остановки приложения
+MemoryLimit=140M                                  # ограничение на использование памяти
+TasksMax=5                                        # максимальноe колво активных задач 5
+Slice=user-1000.slice                             # назначение слайса, необходимо писать наименование конечного слайса без ветки
+Restart=always                                    # авторестарт
+
+[Install]
+WantedBy=multi-user.target                        # входение данного серсвиса в группу таргетов
+```
+дополнительно установим ограничение на использование процессора, данное ограничение останется активным и после перезагрузки VM
+```  
+systemctl set-property jira.service CPUQuota=40%   
+```
+далее создаем линк для организации автозагрузки юнита
+```
+ln -s /lib/systemd/system/jira.service /etc/systemd/system/multi-user.target.wants/
+```
+По ограничению и рестарту сервисов всё, можно грузить и проверять работу служб.
