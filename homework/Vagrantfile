@@ -55,6 +55,7 @@ Vagrant.configure("2") do |config|
           ln -s /lib/systemd/system/httpd@first.service /etc/systemd/system/multi-user.target.wants/
           ln -s /lib/systemd/system/httpd@second.service /etc/systemd/system/multi-user.target.wants/
          #QUEST3
+          yum install wget -y
           wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-8.7.1-x64.bin
           chmod 755 jira*     
           ./jira*
