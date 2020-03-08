@@ -77,4 +77,15 @@ Unit=watchlog.service
 [Install]
 WantedBy=multi-user.target
 ```
-создаем линки в соответствующей дирректории, 
+создаем линки в соответствующей дирректории, для автозапуска юнитов, причём линки нужны и на .timer и на .service, в результате того что таймер настроен на работу только после запуска юнита, если не запустить юнит таймер не запуститься  
+```
+ln -s /lib/systemd/system/watchlog.service /etc/systemd/system/multi-user.target.wants/
+ln -s /lib/systemd/system/watchlog.timer /etc/systemd/system/multi-user.target.wants/
+```
+По мониторингу строки всё, можно перезагружать VM логинится и примерно через минуту в журнале появится соответствующая запись
+```
+journalctl|tail
+--- 
+I found word, Master!"
+---
+```
