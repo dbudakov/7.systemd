@@ -19,3 +19,62 @@ Systemd
 4*. Создать unit-файл(ы):  
 - сервис: демо-версия Atlassian Jira;  
 - переписать(!) скрипт запуска на unit-файл.  
+
+### Решение
+1. мониторинг строки  
+Создаем ряд файлов:  
+  /etc/sysconfig/watchlog # окружение юнита
+```
+# Configuration file for my watchdog service
+# Place it to /etc/sysconfig
+# File and word in that file that we will be monit
+WORD="ALERT"
+LOG=/var/log/watchlog.log 
+```
+
+  /var/log/watchlog.log # непосредственно файл для мониторинга
+```
+ALERT
+```
+
+  /opt/watchlog.sh # скрипт выполнения 
+```
+#!/bin/bash
+#/opt/watchlog.sh
+
+WORD=$1
+LOG=$2
+DATE=`date`
+if grep $WORD $LOG &> /dev/null
+then
+logger "$DATE: I found word, Master!"
+else
+exit 0
+fi
+```
+  /lib/systemd/system/watchlog.service # основной юнит запуска скрипта
+```
+[Unit]
+Description=My watchlog service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/sysconfig/watchlog
+ExecStart=/opt/watchlog.sh $WORD $LOG
+```
+  /lib/systemd/system/watchlog.timer # для тайминга выполнения юнита
+```
+#/lib/systemd/system/watchlog.timer
+
+[Unit]
+Description=Run watchlog script every 30 second
+
+[Timer]
+# Run every 30 second
+OnUnitActiveSec=30
+Unit=watchlog.service
+
+[Install]
+WantedBy=multi-user.target
+```
+создаем линки в соответствующей дирректории, 
