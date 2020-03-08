@@ -21,7 +21,7 @@ Systemd
 - переписать(!) скрипт запуска на unit-файл.  
 
 ### Решение
-1. мониторинг строки  
+#### 1. мониторинг строки  
 Создаем ряд файлов:  
   /etc/sysconfig/watchlog # окружение юнита
 ```
@@ -89,3 +89,43 @@ journalctl|tail
 I found word, Master!"
 ---
 ```
+#### 2. httpd с двойным окружением
+Устанавливаем сервис, и копируем файли юнита, но с пометкой для использования шаблона, файл такого вида указывает что после "@" и до "."  используется шаблон  [name]@[template].service  
+```
+yum install httpd -y
+cp /lib/systemd/system/httpd.service /lib/systemd/system/httpd@.service
+```
+далее правим строку в юните с шаблоном 
+```
+#/lib/systemd/system/httpd@.service
+
+[Service]
+EnvironmentFile=/etc/sysconfig/httpd-%I #добавляем %I для использования подстановки шаблона
+```
+Далее создаем файлы окружения для каждого из шаблонов  
+```
+---file 1
+# /etc/sysconfig/httpd-first
+OPTIONS=-f conf/first.conf
+---
+---file 2
+# /etc/sysconfig/httpd-second
+OPTIONS=-f conf/second.conf
+---
+```
+далее копируем конфиг httpd сервиса для наших шаблонов заменяя в файле для второго шаблона строки PIDFile и используемого порта
+```
+cp /etc/httpd/conf/httpd /etc/httpd/conf/{first,second}
+vi /etc/httpd/cont/second
+
+###/etc/httpd/cont/second
+PidFile /var/run/httpd-second.pid
+Listen 8008
+###
+```
+Добавляем сервисы в автозагрузку
+```
+ln -s /lib/systemd/system/httpd@first.service /etc/systemd/system/multi-user.target.wants/
+ln -s /lib/systemd/system/httpd@second.service /etc/systemd/system/multi-user.target.wants/
+```
+
