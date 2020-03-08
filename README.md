@@ -155,12 +155,12 @@ PIDFile=/opt/atlassian/jira/work/catalina.pid     # пид файл
 ExecStart=/opt/atlassian/jira/bin/start-jira.sh   # скрипт запуска приложения
 ExecStop=/opt/atlassian/jira/bin/stop-jira.sh     # скрипт остановки приложения
 MemoryLimit=140M                                  # ограничение на использование памяти
-TasksMax=5                                        # максимальноe колво активных задач 5
+TasksMax=5                                        # максимальноe кол-во активных задач 5
 Slice=user-1000.slice                             # назначение слайса, необходимо писать наименование конечного слайса без ветки
 Restart=always                                    # авторестарт
 
 [Install]
-WantedBy=multi-user.target                        # входение данного серсвиса в группу таргетов
+WantedBy=multi-user.target                        # вхождение данного серсвиса в группу таргетов
 ```
 дополнительно установим ограничение на использование процессора, данное ограничение останется активным и после перезагрузки VM
 ```  
