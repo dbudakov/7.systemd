@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
           ln -s /lib/systemd/system/watchlog.timer /etc/systemd/system/multi-user.target.wants/
          #QUEST2
           yum install httpd -y
-          cp /vagrant/2_httpd@,service /lib/systemd/system/httpd@.service 
+          cp /vagrant/2_httpd@.service /lib/systemd/system/httpd@.service 
           cp /vagrant/2_httpd-first /etc/sysconfig/httpd-first
           cp /vagrant/2_httpd-second /etc/sysconfig/httpd-second
           cp /vagrant/2_first.conf /etc/httpd/conf/first.conf
