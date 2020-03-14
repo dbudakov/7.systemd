@@ -109,9 +109,9 @@ Documentation=man:apachectl(8)
 [Service]
 Type=notify
 EnvironmentFile=/etc/sysconfig/httpd-%I
-ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND
-ExecReload=/usr/sbin/httpd $OPTIONS -k graceful
-ExecStop=/bin/kill -WINCH ${MAINPID}
+ExecStart=/usr/sbin/httpd \$OPTIONS -DFOREGROUND
+ExecReload=/usr/sbin/httpd \$OPTIONS -k graceful
+ExecStop=/bin/kill -WINCH \${MAINPID}
 KillSignal=SIGCONT
 PrivateTmp=true
 		
@@ -160,54 +160,55 @@ EOF
 		CONF2
 		CONF_HTTPD
 		LN_HTTPD
-		telinit 6
 	}
 QUEST2
+
 
 #QUEST3
 	INST_WGET(){
 	 src16=wget
-	 src17="https://www.atlassian.com/software/jira/downloads/binary/"
-	 op17="/root/atlassian-jira-software-8.7.1-x64.bin"
+	 src17="https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-8.7.1-x64.bin"
+	 op17=/root/atlassian-jira-software-8.7.1-x64.bin
 	 yum install $src16  -y
 	 wget $src17 -O $op17
 	 chmod 755 $op17
-	 $op1
+	 $op17
 	}
          
-	SRV_JIRA(){ 
-	op18="/lib/systemd/system/jira.service"
-	cat >$op18<<EOF
-		[Unit]
-		Description=Atlassian Jira
-		After=network.target
-		
-		[Service]
-		Type=forking
-		User=jira
-		PIDFile=/opt/atlassian/jira/work/catalina.pid
-		ExecStart=/opt/atlassian/jira/bin/start-jira.sh
-		ExecStop=/opt/atlassian/jira/bin/stop-jira.sh
-		MemoryLimit=140M
-		TasksMax=5
-		Slice=user-1000.slice
-		Restart=always
-		
-		[Install]
-		WantedBy=multi-user.target
+SRV_JIRA(){ 
+op18="/lib/systemd/system/jira.service"
+cat >$op18<<EOF
+[Unit]
+Description=Atlassian Jira
+After=network.target
+	
+[Service]
+Type=forking
+User=jira
+PIDFile=/opt/atlassian/jira/work/catalina.pid
+ExecStart=/opt/atlassian/jira/bin/start-jira.sh
+ExecStop=/opt/atlassian/jira/bin/stop-jira.sh
+MemoryLimit=140M
+TasksMax=5
+Slice=user-1000.slice
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
 EOF
 	}
           
 	ln_service(){
-	 src19="/lib/systemd/system/jira.service"
-	 op19="/etc/systemd/system/multi-user.target.wants/"
-	 ln -s $src19 $op19
+		src19=/lib/systemd/system/jira.service
+		op19=/etc/systemd/system/multi-user.target.wants/
+		ln -s $src19 $op19
 	}
         
 	QUEST3(){
 		INST_WGET
 		SRV_JIRA
 		ln_service
+		systemctl start jira		
 		systemctl set-property \
 			jira.service \
 			CPUQuota=40%
