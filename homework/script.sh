@@ -9,7 +9,7 @@
 		# File and word in that file that we will be monit
 		WORD="ALERT"
 		LOG=/var/log/watchlog.log
-		EOF
+EOF
 	}          
 
 
