@@ -152,7 +152,7 @@ EOF
 		src14="/lib/systemd/system/httpd@first.service"
 		src15="/lib/systemd/system/httpd@second.service"
 		op14="/etc/systemd/system/multi-user.target.wants/"
-		ln -s \$src{14,15} \$op14
+		ln -s $src{14,15} $op14
 	}
 	QUEST2(){
 		PRECONF2
