@@ -76,7 +76,8 @@ LN_WATCH(){
 src6="/lib/systemd/system/watchlog.service"
 src7="/lib/systemd/system/watchlog.timer"  
 op6="/etc/systemd/system/multi-user.target.wants/"
-ln -s \$src{6,7} $op6
+ln -s $src6 $op6
+ln -s $src7 $op6
 	}       
 	
 QUEST1(){
