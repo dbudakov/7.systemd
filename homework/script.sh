@@ -71,7 +71,7 @@ EOF
 	}
         
 	
-	LN_WATCH{
+	LN_WATCH(){
 		src6=/lib/systemd/system/watchlog.service
 		src7=/lib/systemd/system/watchlog.timer  
 		op6=/etc/systemd/system/multi-user.target.wants/
