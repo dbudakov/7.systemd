@@ -21,19 +21,34 @@ Systemd
 - переписать(!) скрипт запуска на unit-файл.  
 
 ### Решение
-Скрипт лежит [здесь]
+Скрипт лежит [здесь]  
+Скрипт останавливается и ждёт ответа после загрузки дистрибутива Jira,
+```
+We couldn't find fontconfig, which is required to use OpenJDK. Press [y, Enter] to install it.
+For more info, see https://confluence.atlassian.com/x/PRCEOQ
+```
+необходимо прожать "y", далее можно жать "Enter", далее будет вопрос о запуске сервиса
+```
+Installation of Jira Software 8.7.1 is complete
+Start Jira Software 8.7.1 now?
+Yes [y, Enter], No [n]
+```
+на запрос запуска сервиса прожать "n"
+
+1.Проверить мониторинг строки из watchlog
+```
+journalctl |grep Master
+```
 2.работу двух httpd сервисов проверить так
 ``` 
  ss -tnulp | grep httpd
 ```
-3.лимиты jira проверить так, а также ограничения по использованию процессора
+3.лимиты jira, а также ограничения по использованию процессора проверить так 
 ```
 for i in Active CGroup Memory Tasks;do systemctl status jira| grep $i;done
 systemd-cgtop 
 ```
-
-
-
+### Описание
 #### 1. мониторинг строки  
 Создаем ряд файлов:  
   /etc/sysconfig/watchlog # окружение юнита
