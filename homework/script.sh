@@ -1,7 +1,7 @@
 #!/bin/bash
 #OUEST1
 	CONF(){
-		op0=/etc/sysconfig/watchlog
+		op0="/etc/sysconfig/watchlog"
 		cat>$op0<<EOF
 		# /etc/sysconfig/watchlog
 		# Configuration file for my watchdog service
@@ -14,7 +14,7 @@ EOF
 
 
 	LOG(){
-		op1=/var/log/watchlog.log
+		op1="/var/log/watchlog.log"
 		cat>$op1<<EOF
 		#/var/log/watchlog.log
 		ALERT
@@ -22,7 +22,7 @@ EOF
 	}
 
 	SH(){
-		op2=/opt/watchlog.sh
+		op2="/opt/watchlog.sh"
 		cat>$op2<<EOF
 		#!/bin/bash
 		#/opt/watchlog.sh
@@ -40,7 +40,7 @@ EOF
 	}
 
 	SRV_WATCH(){
-		op4=/lib/systemd/system/watchlog.service
+		op4="/lib/systemd/system/watchlog.service"
 		cat>$op4<<EOF
 		#/lib/systemd/system/watchlog.service
 		
@@ -54,7 +54,7 @@ EOF
 EOF
 	}
 	TIMER_WATCH(){
-		op5=/lib/systemd/system/watchlog.timer
+		op5="/lib/systemd/system/watchlog.timer"
 		cat>$op5<<EOF
 		#/lib/systemd/system/watchlog.timer
 		[Unit]
@@ -72,9 +72,9 @@ EOF
         
 	
 	LN_WATCH(){
-		src6=/lib/systemd/system/watchlog.service
-		src7=/lib/systemd/system/watchlog.timer  
-		op6=/etc/systemd/system/multi-user.target.wants/
+		src6="/lib/systemd/system/watchlog.service"
+		src7="/lib/systemd/system/watchlog.timer"  
+		op6="/etc/systemd/system/multi-user.target.wants/"
 		ln -s $src{6,7} $op6
 	}       
 	
@@ -96,7 +96,7 @@ QUEST1
 	}
 
 	SRV2(){
-	op9=/lib/systemd/system/httpd@.service
+	op9="/lib/systemd/system/httpd@.service"
 	cat>$op9<<EOF
 		[Unit]
 		Description=The Apache HTTP Server
@@ -120,8 +120,8 @@ EOF
 
 
 	CONF2(){
-		op10=/etc/sysconfig/httpd-first
-		op11=/etc/sysconfig/httpd-second
+		op10="/etc/sysconfig/httpd-first"
+		op11="/etc/sysconfig/httpd-second"
 		cat>$op10<<EOF
 			# /etc/sysconfig/httpd-first
 			OPTIONS=-f conf/first.conf
@@ -142,9 +142,9 @@ EOF
 	}	
 	
 	LN_HTTPD(){
-		src14=/lib/systemd/system/httpd@first.service
-		src15=/lib/systemd/system/httpd@second.service  
-		op14=/etc/systemd/system/multi-user.target.wants/
+		src14="/lib/systemd/system/httpd@first.service"
+		src15="/lib/systemd/system/httpd@second.service"
+		op14="/etc/systemd/system/multi-user.target.wants/"
 		ln -s $src{14,15} $op14
 	}
 	QUEST2(){
@@ -160,8 +160,8 @@ QUEST2
 #QUEST3
 	INST_WGET(){
 	 src16=wget
-	 src17=https://www.atlassian.com/software/jira/downloads/binary/
-	 op17=/root/atlassian-jira-software-8.7.1-x64.bin
+	 src17="https://www.atlassian.com/software/jira/downloads/binary/"
+	 op17="/root/atlassian-jira-software-8.7.1-x64.bin"
 	 yum install $src16  -y
 	 wget $src17 -O $op17
 	 chmod 755 $op17
@@ -169,7 +169,7 @@ QUEST2
 	}
          
 	SRV_JIRA(){ 
-	op18=/lib/systemd/system/jira.service
+	op18="/lib/systemd/system/jira.service"
 	cat >$op18<<EOF
 		[Unit]
 		Description=Atlassian Jira
@@ -192,8 +192,8 @@ EOF
 	}
           
 	ln_service(){
-	 src19=/lib/systemd/system/jira.service
-	 op19=/etc/systemd/system/multi-user.target.wants/
+	 src19="/lib/systemd/system/jira.service"
+	 op19="/etc/systemd/system/multi-user.target.wants/"
 	 ln -s $src19 $op19
 	}
         
