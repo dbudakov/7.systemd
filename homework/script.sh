@@ -18,7 +18,7 @@ EOF
 		cat>$op1<<EOF
 		#/var/log/watchlog.log
 		ALERT
-		EOF
+EOF
 	}
 
 	SH(){
@@ -35,7 +35,7 @@ EOF
 		else
 			exit 0
 		fi
-		EOF
+EOF
 		chmod +x /opt/watchlog.sh
 	}
 
@@ -51,7 +51,7 @@ EOF
 		Type=oneshot
 		EnvironmentFile=/etc/sysconfig/watchlog
 		ExecStart=/opt/watchlog.sh $WORD $LOG
-		EOF
+EOF
 	}
 	TIMER_WATCH(){
 		op5=/lib/systemd/system/watchlog.timer
@@ -67,7 +67,7 @@ EOF
 		
 		[Install]
 		WantedBy=multi-user.target
-		EOF
+EOF
 	}
         
 	
@@ -115,7 +115,7 @@ QUEST1
 		
 		[Install]
 		WantedBy=multi-user.target
-		EOF
+EOF
 	}
 
 
@@ -129,7 +129,7 @@ QUEST1
 	        cat>$op11<<EOF
 			# /etc/sysconfig/httpd-second
 			OPTIONS=-f conf/second.conf
-		EOF
+EOF
 	}
 
 	CONF_HTTPD{
@@ -188,7 +188,7 @@ QUEST2
 		
 		[Install]
 		WantedBy=multi-user.target
-		EOF
+EOF
 	}
           
 	ln_service(){
