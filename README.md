@@ -22,10 +22,14 @@ Systemd
 
 ### Решение
 Скрипт лежит [здесь]
-
-3.лимиты jira проверить так
+2.работу двух httpd сервисов проверить так
+``` 
+ ss -tnulp | grep httpd
+```
+3.лимиты jira проверить так, а также ограничения по использованию процессора
 ```
 for i in Active CGroup Memory Tasks;do systemctl status jira| grep $i;done
+systemd-cgtop 
 ```
 
 
