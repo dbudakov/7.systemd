@@ -132,7 +132,7 @@ EOF
 EOF
 	}
 
-	CONF_HTTPD{
+	CONF_HTTPD(){
 		src12=/vagrant/2_first.conf 
 		src13=/vagrant/2_second.conf
 		op12=/etc/httpd/conf/first.conf
@@ -141,7 +141,7 @@ EOF
 		cp $src13 $op13
 	}	
 	
-	LN_HTTPD{
+	LN_HTTPD(){
 		src14=/lib/systemd/system/httpd@first.service
 		src15=/lib/systemd/system/httpd@second.service  
 		op14=/etc/systemd/system/multi-user.target.wants/
