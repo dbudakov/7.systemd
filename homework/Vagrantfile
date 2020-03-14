@@ -35,33 +35,33 @@ Vagrant.configure("2") do |config|
 
           box.vm.provision "shell", inline: <<-SHELL
           mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
-
-         #OUEST1
-          cp /vagrant/1_watchlog /etc/sysconfig/watchlog
-          cp /vagrant/1_watchlog.log /var/log/watchlog.log
-          cp /vagrant/1_watchlog.sh /opt/watchlog.sh
-          cp /vagrant/1_watchlog.service /lib/systemd/system/watchlog.service
-          cp /vagrant/1_watchlog.timer /lib/systemd/system/watchlog.timer
-          chmod +x /opt/watchlog.sh
-          ln -s /lib/systemd/system/watchlog.service /etc/systemd/system/multi-user.target.wants/
-          ln -s /lib/systemd/system/watchlog.timer /etc/systemd/system/multi-user.target.wants/
-         #QUEST2
-          yum install httpd -y
-          cp /vagrant/2_httpd@.service /lib/systemd/system/httpd@.service 
-          cp /vagrant/2_httpd-first /etc/sysconfig/httpd-first
-          cp /vagrant/2_httpd-second /etc/sysconfig/httpd-second
-          cp /vagrant/2_first.conf /etc/httpd/conf/first.conf
-          cp /vagrant/2_second.conf /etc/httpd/conf/second.conf
-          ln -s /lib/systemd/system/httpd@first.service /etc/systemd/system/multi-user.target.wants/
-          ln -s /lib/systemd/system/httpd@second.service /etc/systemd/system/multi-user.target.wants/
-         #QUEST3
-          yum install wget -y
-          wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-8.7.1-x64.bin
-          chmod 755 jira*     
-          ./jira*
-          cp /vagrant/3_jira.service /lib/systemd/system/jira.service
-          ln -s /lib/systemd/system/jira.service /etc/systemd/system/multi-user.target.wants/
-          systemctl set-property jira.service CPUQuota=40%          
+          /bin/bash /vagrant/script.sh
+#         #OUEST1
+#          cp /vagrant/1_watchlog /etc/sysconfig/watchlog
+#          cp /vagrant/1_watchlog.log /var/log/watchlog.log
+#          cp /vagrant/1_watchlog.sh /opt/watchlog.sh
+#          cp /vagrant/1_watchlog.service /lib/systemd/system/watchlog.service
+#          cp /vagrant/1_watchlog.timer /lib/systemd/system/watchlog.timer
+#          chmod +x /opt/watchlog.sh
+#          ln -s /lib/systemd/system/watchlog.service /etc/systemd/system/multi-user.target.wants/
+#          ln -s /lib/systemd/system/watchlog.timer /etc/systemd/system/multi-user.target.wants/
+#         #QUEST2
+#          yum install httpd -y
+#         cp /vagrant/2_httpd@.service /lib/systemd/system/httpd@.service 
+#          cp /vagrant/2_httpd-first /etc/sysconfig/httpd-first
+#          cp /vagrant/2_httpd-second /etc/sysconfig/httpd-second
+#          cp /vagrant/2_first.conf /etc/httpd/conf/first.conf
+#          cp /vagrant/2_second.conf /etc/httpd/conf/second.conf
+#          ln -s /lib/systemd/system/httpd@first.service /etc/systemd/system/multi-user.target.wants/
+#          ln -s /lib/systemd/system/httpd@second.service /etc/systemd/system/multi-user.target.wants/
+#         #QUEST3
+#          yum install wget -y
+#          wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-8.7.1-x64.bin
+#          chmod 755 jira*     
+#         ./jira*
+#          cp /vagrant/3_jira.service /lib/systemd/system/jira.service
+#          ln -s /lib/systemd/system/jira.service /etc/systemd/system/multi-user.target.wants/
+#          systemctl set-property jira.service CPUQuota=40%          
           SHELL
 
       end
