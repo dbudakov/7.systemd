@@ -86,7 +86,6 @@ SH
 SRV_WATCH
 TIMER_WATCH
 LN_WATCH
-telinit 6
 	}   
 
 QUEST1
@@ -214,3 +213,4 @@ EOF
 			CPUQuota=40%
 	} 	
 QUEST3
+telinit 6
