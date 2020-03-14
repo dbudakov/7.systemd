@@ -21,6 +21,15 @@ Systemd
 - переписать(!) скрипт запуска на unit-файл.  
 
 ### Решение
+Скрипт лежит [здесь]
+
+3.лимиты jira проверить так
+```
+for i in Active CGroup Memory Tasks;do systemctl status jira| grep $i;done
+```
+
+
+
 #### 1. мониторинг строки  
 Создаем ряд файлов:  
   /etc/sysconfig/watchlog # окружение юнита
