@@ -34,8 +34,8 @@ Vagrant.configure("2") do |config|
           end
 
           box.vm.provision "shell", inline: <<-SHELL
-          mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
-          /bin/bash /vagrant/script.sh
+#          mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
+#          /bin/bash /vagrant/script.sh
 #         #OUEST1
 #          cp /vagrant/1_watchlog /etc/sysconfig/watchlog
 #          cp /vagrant/1_watchlog.log /var/log/watchlog.log
