@@ -188,6 +188,7 @@ User=jira
 PIDFile=/opt/atlassian/jira/work/catalina.pid
 ExecStart=/opt/atlassian/jira/bin/start-jira.sh
 ExecStop=/opt/atlassian/jira/bin/stop-jira.sh
+SuccessExitStatus=143				
 MemoryLimit=140M
 TasksMax=20
 Slice=user-1000.slice
