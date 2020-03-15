@@ -21,7 +21,7 @@ Systemd
 - переписать(!) скрипт запуска на unit-файл.  
 
 ### Решение
-Скрипт лежит [здесь](https://github.com/dbudakov/7.systemd/blob/master/homework/script.sh) 
+Скрипт лежит [здесь](https://github.com/dbudakov/7.systemd/blob/master/homework/script.sh)   
 После запуска VM запустить `/vagrant/script.sh`, cценарий настройки останавливается и ждёт ответа после загрузки дистрибутива Jira:
 ```
 We couldn't find fontconfig, which is required to use OpenJDK. Press [y, Enter] to install it.
@@ -84,7 +84,7 @@ LOG=\$2
 DATE=\`date\`
 if grep \$WORD \$LOG &> /dev/null                         # оператор условия настроен на grep
 then                                                      # если код возврата 0, то пишется
-	logger "\$DATE: I found word, Master!"                  # строка в лог, иначе нет
+	logger "\$DATE: I found word, Master!"            # строка в лог, иначе нет
 else
 	exit 0
 fi
@@ -145,7 +145,7 @@ LN_WATCH
 QUEST1                                                    # запуск функции
   
 #QUEST2
-	PRECONF2(){                                             # предустрановка VM
+	PRECONF2(){                                       # предустрановка VM
 		src8=httpd
         	yum install $src8 -y
 	}
@@ -187,16 +187,16 @@ OPTIONS=-f conf/second.conf
 EOF
 	}
 
-	CONF_HTTPD(){                                         # копирование основного файла конфигурации httpd
-		src12=/etc/httpd/conf/httpd.conf                    # для наших сервисов с правкой файла для httpd-second.service
+	CONF_HTTPD(){                              # копирование основного файла конфигурации httpd
+		src12=/etc/httpd/conf/httpd.conf   # для наших сервисов с правкой файла для httpd-second.service
 		op12=/etc/httpd/conf/first.conf         
 		op13=/etc/httpd/conf/second.conf
 
 		cp $src12 $op12
 		cp $src12 $op13
-	sed -i '                                              # поиск строки с параметром порта и замена 80 на 8008
+	sed -i '                                   # поиск строки с параметром порта и замена 80 на 8008
 	s/Listen 80/Listen 8008/' $op13                       
-	sed -i '                                              # настрой PidFile'a для второго сервиса
+	sed -i '                                   # настрой PidFile'a для второго сервиса
 	s/# least PidFile./PidFile \/var\/run\/httpd-second.pid/' $op13   
 
 	}	
@@ -205,20 +205,20 @@ EOF
 		src14="/lib/systemd/system/httpd@first.service"
 		src15="/lib/systemd/system/httpd@second.service"
 		op14="/etc/systemd/system/multi-user.target.wants/"
-		ln -s $src{14,15} $op14                             # создание симлинков для автостарта служб   
+		ln -s $src{14,15} $op14            # создание симлинков для автостарта служб   
 	}
-	QUEST2(){                                             # запуск функций в определённом порядке
+	QUEST2(){                                  # запуск функций в определённом порядке
 		PRECONF2
 		SRV2
 		CONF2
 		CONF_HTTPD
 		LN_HTTPD
 	}
-QUEST2                                                  # вызов основной функции
+QUEST2                                             # вызов основной функции
 
 
 #QUEST3
-	INST_WGET(){                                         # предустановка для настройки jira.service
+	INST_WGET(){                               # предустановка для настройки jira.service
 	 src16=wget
 	 src17="https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-8.7.1-x64.bin"
 	 op17=/root/atlassian-jira-software-8.7.1-x64.bin
@@ -228,24 +228,24 @@ QUEST2                                                  # вызов основ�
 	 $op17
 	}
          
-SRV_JIRA(){                                             # создание юнита для jira.service
+SRV_JIRA(){                                        # создание юнита для jira.service
 op18="/lib/systemd/system/jira.service"
 cat >$op18<<EOF
 [Unit]
 Description=Atlassian Jira
-After=network.target                                    # требование для загрузки
+After=network.target                               # требование для загрузки
 	
 [Service]
-Type=forking                                            # тип service'а 
+Type=forking                                       # тип service'а 
 User=jira
 PIDFile=/opt/atlassian/jira/work/catalina.pid           
 ExecStart=/opt/atlassian/jira/bin/start-jira.sh           
 ExecStop=/opt/atlassian/jira/bin/stop-jira.sh           
-MemoryLimit=140M                                        # лимит памяти для юнита
-TasksMax=20                                             # лимит тасков для юнита
-Slice=user-1000.slice                                   # установка slice для юнита
-Restart=always                                          # рестарт юнита, в случае некорректного завершения его работы
-                                                        # отличной от systemctl stop [service]
+MemoryLimit=140M                                   # лимит памяти для юнита
+TasksMax=20                                        # лимит тасков для юнита
+Slice=user-1000.slice                              # установка slice для юнита
+Restart=always                                     # рестарт юнита, в случае некорректного завершения его работы
+                                                   # отличной от systemctl stop [service]
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -254,19 +254,19 @@ EOF
 	ln_service(){
 		src19=/lib/systemd/system/jira.service
 		op19=/etc/systemd/system/multi-user.target.wants/
-		ln -s $src19 $op19                                 # создание симлинков для автостарта jira.service
+		ln -s $src19 $op19                 # создание симлинков для автостарта jira.service
 	}
         
-	QUEST3(){                                            # вызов функций в определённом порядке
+	QUEST3(){                                  # вызов функций в определённом порядке
 		INST_WGET
 		SRV_JIRA
 		ln_service
 		systemctl start jira		
-		systemctl set-property \                           # ограничение использования юнитом процессора
+		systemctl set-property \          # ограничение использования юнитом процессора
 			jira.service \
 			CPUQuota=40%  
 	} 	
-QUEST3                                                 # запуск функции 
-telinit 6                                              # рестарт системы
+QUEST3                                            # запуск функции 
+telinit 6                                         # рестарт системы
 
 ```
