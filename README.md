@@ -22,7 +22,7 @@ Systemd
 
 ### Решение
 Скрипт лежит [здесь](https://github.com/dbudakov/7.systemd/blob/master/homework/script.sh)   
-После запуска VM запустить `/vagrant/script.sh`, cценарий настройки останавливается и ждёт ответа после загрузки дистрибутива Jira:
+После запуска VM, необходимо запустить `/vagrant/script.sh`, cценарий настройки останавливается и ждёт ответа после загрузки дистрибутива Jira:
 ```
 We couldn't find fontconfig, which is required to use OpenJDK. Press [y, Enter] to install it.
 For more info, see https://confluence.atlassian.com/x/PRCEOQ
