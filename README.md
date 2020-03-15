@@ -241,11 +241,13 @@ User=jira
 PIDFile=/opt/atlassian/jira/work/catalina.pid           
 ExecStart=/opt/atlassian/jira/bin/start-jira.sh           
 ExecStop=/opt/atlassian/jira/bin/stop-jira.sh           
+SuccessExitStatus=143				   # обработка 143 кода возврата, что нормально для java приложения
 MemoryLimit=140M                                   # лимит памяти для юнита
 TasksMax=20                                        # лимит тасков для юнита
 Slice=user-1000.slice                              # установка slice для юнита
 Restart=always                                     # рестарт юнита, в случае некорректного завершения его работы
-                                                   # отличной от systemctl stop [service]
+			                           # отличной от systemctl stop [service]
+						   
 [Install]
 WantedBy=multi-user.target
 EOF
