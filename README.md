@@ -21,13 +21,13 @@ Systemd
 - переписать(!) скрипт запуска на unit-файл.  
 
 ### Решение
-Скрипт лежит [здесь]  
-Скрипт останавливается и ждёт ответа после загрузки дистрибутива Jira,
+Скрипт лежит [здесь](https://github.com/dbudakov/7.systemd/blob/master/homework/script.sh) 
+После запуска VM запустить `/vagrant/script.sh`, cценарий настройки останавливается и ждёт ответа после загрузки дистрибутива Jira:
 ```
 We couldn't find fontconfig, which is required to use OpenJDK. Press [y, Enter] to install it.
 For more info, see https://confluence.atlassian.com/x/PRCEOQ
 ```
-необходимо прожать "y", далее можно жать "Enter", далее будет вопрос о запуске сервиса
+необходимо прожать "y", далее можно жать "Enter", после чего будет вопрос о запуске сервиса:
 ```
 Installation of Jira Software 8.7.1 is complete
 Start Jira Software 8.7.1 now?
@@ -35,167 +35,238 @@ Yes [y, Enter], No [n]
 ```
 на запрос запуска сервиса прожать "n"
 
-1.Проверить мониторинг строки из watchlog
+#### Проверка настроек VM  
+1. Проверить мониторинг строки
 ```
-journalctl |grep Master
+journalctl |tail| grep Master
 ```
-2.работу двух httpd сервисов проверить так
-``` 
+2. Проверить работу двух httpd сервисов
+```  
  ss -tnulp | grep httpd
 ```
-3.лимиты jira, а также ограничения по использованию процессора проверить так 
+3. Проверить лимиты jira.service, а также ограничения по использованию процессора проверить так:  
 ```
 for i in Active CGroup Memory Tasks;do systemctl status jira| grep $i;done
 systemd-cgtop 
 ```
-### Описание
-#### 1. мониторинг строки  
-Создаем ряд файлов:  
-  /etc/sysconfig/watchlog # окружение юнита
+#### Описание скрипта
 ```
+#!/bin/bash
+#OUEST1
+
+CONF(){                                                   # создаем файл /sysconfig/watchlog, он же
+op0="/etc/sysconfig/watchlog"                             # файл настроек для скрипта watchlog.sh
+cat>$op0<<EOF
+# /etc/sysconfig/watchlog
 # Configuration file for my watchdog service
 # Place it to /etc/sysconfig
 # File and word in that file that we will be monit
-WORD="ALERT"
-LOG=/var/log/watchlog.log 
-```
+WORD=ALERT
+LOG=/var/log/watchlog.log
+EOF
+	}          
 
-  /var/log/watchlog.log # непосредственно файл для мониторинга
-```
+LOG(){                                                    # создаем сам лог в котором будет мониторится  
+op1="/var/log/watchlog.log"                               # наличие слова "ALERT"
+cat>$op1<<EOF
+#/var/log/watchlog.log
 ALERT
-```
+EOF
+	}
 
-  /opt/watchlog.sh # скрипт выполнения 
-```
+SH(){                                                     #  создаем скрипт /opt/watchlog
+op2="/opt/watchlog.sh"
+cat>$op2<<EOF
 #!/bin/bash
 #/opt/watchlog.sh
-
-WORD=$1
-LOG=$2
-DATE=`date`
-if grep $WORD $LOG &> /dev/null
-then
-logger "$DATE: I found word, Master!"
+WORD=\$1
+LOG=\$2
+DATE=\`date\`
+if grep \$WORD \$LOG &> /dev/null                         # оператор условия настроен на grep
+then                                                      # если код возврата 0, то пишется
+	logger "\$DATE: I found word, Master!"                  # строка в лог, иначе нет
 else
-exit 0
+	exit 0
 fi
-```
-  /lib/systemd/system/watchlog.service # основной юнит запуска скрипта
-```
-[Unit]
-Description=My watchlog service
+EOF
+chmod +x /opt/watchlog.sh
+	}
 
+SRV_WATCH(){                                              # unit.sevice для watchlog.sh
+op4="/lib/systemd/system/watchlog.service"                  
+cat>$op4<<EOF
+#/lib/systemd/system/watchlog.service
+		
+[Unit]
+Description=My watchlog service                     
+				
 [Service]
-Type=oneshot
-EnvironmentFile=/etc/sysconfig/watchlog
-ExecStart=/opt/watchlog.sh $WORD $LOG
-```
-  /lib/systemd/system/watchlog.timer # для тайминга выполнения юнита
-```
-#/lib/systemd/system/watchlog.timer
+Type=oneshot                                              # тип сервиса, один запуск
+EnvironmentFile=/etc/sysconfig/watchlog                   # файл окружения
+ExecStart=/opt/watchlog.sh \$WORD \$LOG                   # скрипт старта с передачей скрипту параметров
+EOF
+	}
 
-[Unit]
-Description=Run watchlog script every 30 second
+TIMER_WATCH(){                                            # юнит для таймера  watchlog
+op5="/lib/systemd/system/watchlog.timer"                  
+cat>$op5<<EOF                             
+#/lib/systemd/system/watchlog.timer                       
+[Unit]  
+Description=Run watchlog script every 30 second           
 
 [Timer]
 # Run every 30 second
-OnUnitActiveSec=30
-Unit=watchlog.service
+OnUnitActiveSec=30                                        # параметр означает запуск по событию после активации
+Unit=watchlog.service                                     # сервиса с аналогичным именем через 30 сек 
+                                                         
+[Install]
+WantedBy=multi-user.target                                # соответствие таргету загрузки  
+EOF
+	}
+        
+	
+LN_WATCH(){
+src6="/lib/systemd/system/watchlog.service"
+src7="/lib/systemd/system/watchlog.timer"  
+op6="/etc/systemd/system/multi-user.target.wants/"
+ln -s $src6 $op6                                          # создание символических ссылок на наши юниты
+ln -s $src7 $op6                                          # аналогично команде systemctl enable [unit]
+	}       
+	
+QUEST1(){                                                 # вызов функций в определённом порядке
+CONF
+LOG
+SH
+SRV_WATCH
+TIMER_WATCH
+LN_WATCH
+	}   
 
+QUEST1                                                    # запуск функции
+  
+#QUEST2
+	PRECONF2(){                                             # предустрановка VM
+		src8=httpd
+        	yum install $src8 -y
+	}
+                      
+SRV2(){                                                   # создание юнита для сервиса httpd с использованием                 
+op9="/lib/systemd/system/httpd@.service"                  # шаблона
+cat>$op9<<EOF
+[Unit]
+Description=The Apache HTTP Server
+After=network.target remote-fs.target nss-lookup.target
+Documentation=man:httpd(8)
+Documentation=man:apachectl(8)
+		
+[Service]
+Type=notify
+EnvironmentFile=/etc/sysconfig/httpd-%I                   # непосредственно обозначение подстановки шаблона
+ExecStart=/usr/sbin/httpd \$OPTIONS -DFOREGROUND
+ExecReload=/usr/sbin/httpd \$OPTIONS -k graceful
+ExecStop=/bin/kill -WINCH \${MAINPID}
+KillSignal=SIGCONT
+PrivateTmp=true
+		
 [Install]
 WantedBy=multi-user.target
-```
-создаем линки в соответствующей дирректории, для автозапуска юнитов, причём линки нужны и на .timer и на .service, в результате того что таймер настроен на работу только после запуска юнита, если не запустить юнит таймер не запуститься  
-```
-ln -s /lib/systemd/system/watchlog.service /etc/systemd/system/multi-user.target.wants/
-ln -s /lib/systemd/system/watchlog.timer /etc/systemd/system/multi-user.target.wants/
-```
-По проверки лога всё, можно перезагружать VM логинится и примерно через минуту в журнале с небольшим промежутком будет появлятся соответствующая запись
-```
-journalctl|tail
---- 
-I found word, Master!"
----
-```
-#### 2. httpd с двойным окружением
-Устанавливаем сервис, и копируем файли юнита, но с пометкой для использования шаблона, файл такого вида указывает что после "@" и до "."  используется шаблон  [name]@[template].service  
-```
-yum install httpd -y
-cp /lib/systemd/system/httpd.service /lib/systemd/system/httpd@.service
-```
-далее правим строку в юните с шаблоном 
-```
-#/lib/systemd/system/httpd@.service
+EOF
+	}
 
-[Service]
-EnvironmentFile=/etc/sysconfig/httpd-%I #добавляем %I для использования подстановки шаблона
-```
-Далее создаем файлы окружения для каждого из шаблонов  
-```
----file 1
+
+CONF2(){                                                # создание файлов конфигурации ОКРУЖЕНИЯ для 
+op10=/etc/sysconfig/httpd-first                         # двух httpd.service
+op11=/etc/sysconfig/httpd-second
+cat>$op10<<EOF
 # /etc/sysconfig/httpd-first
 OPTIONS=-f conf/first.conf
----
----file 2
+EOF
+cat>$op11<<EOF
 # /etc/sysconfig/httpd-second
 OPTIONS=-f conf/second.conf
----
-```
-далее копируем конфиг httpd сервиса для наших шаблонов заменяя в файле для второго шаблона строки PIDFile и используемого порта
-```
-cp /etc/httpd/conf/httpd /etc/httpd/conf/{first,second}
-vi /etc/httpd/cont/second
+EOF
+	}
 
-###/etc/httpd/cont/second
-PidFile /var/run/httpd-second.pid
-Listen 8008
-###
-```
-Добавляем сервисы в автозагрузку
-```
-ln -s /lib/systemd/system/httpd@first.service /etc/systemd/system/multi-user.target.wants/
-ln -s /lib/systemd/system/httpd@second.service /etc/systemd/system/multi-user.target.wants/
-```
-по настройки httpd в двойном окружении всё, можно грузить VM и проверять работу служб
-```
- ss -tnulp | grep httpd
-```
+	CONF_HTTPD(){                                         # копирование основного файла конфигурации httpd
+		src12=/etc/httpd/conf/httpd.conf                    # для наших сервисов с правкой файла для httpd-second.service
+		op12=/etc/httpd/conf/first.conf         
+		op13=/etc/httpd/conf/second.conf
 
-#### 3. Установка jira(java app), ограничение ресурсов
-скачиваем и устанавливаем только клиент jira
-```
-yum install wget -y
-mkdir /opt/src ; cd /opt/src
-wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-8.7.1-x64.bin
-chmod 755 /opt/src/jira*     
-/opt/src/jira*
-```
-создаем юнит и ограничиваем его по нескольким параметрам, а также ставим параметр рестарта в режиме "always", чтобы служба самостоятельно перезапускалась, при некорректном её выключении, автостарт не сработает только в случае корректной остановки службы через `systemctl stop jira.service`
-```
+		cp $src12 $op12
+		cp $src12 $op13
+	sed -i '                                              # поиск строки с параметром порта и замена 80 на 8008
+	s/Listen 80/Listen 8008/' $op13                       
+	sed -i '                                              # настрой PidFile'a для второго сервиса
+	s/# least PidFile./PidFile \/var\/run\/httpd-second.pid/' $op13   
+
+	}	
+	
+	LN_HTTPD(){
+		src14="/lib/systemd/system/httpd@first.service"
+		src15="/lib/systemd/system/httpd@second.service"
+		op14="/etc/systemd/system/multi-user.target.wants/"
+		ln -s $src{14,15} $op14                             # создание симлинков для автостарта служб   
+	}
+	QUEST2(){                                             # запуск функций в определённом порядке
+		PRECONF2
+		SRV2
+		CONF2
+		CONF_HTTPD
+		LN_HTTPD
+	}
+QUEST2                                                  # вызов основной функции
+
+
+#QUEST3
+	INST_WGET(){                                         # предустановка для настройки jira.service
+	 src16=wget
+	 src17="https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-8.7.1-x64.bin"
+	 op17=/root/atlassian-jira-software-8.7.1-x64.bin
+	 yum install $src16  -y
+	 wget $src17 -O $op17
+	 chmod 755 $op17
+	 $op17
+	}
+         
+SRV_JIRA(){                                             # создание юнита для jira.service
+op18="/lib/systemd/system/jira.service"
+cat >$op18<<EOF
 [Unit]
-Description=Atlassian Jira                        # описание юнита
-After=network.target                              # условия загрузки, после сетевых служб
-
+Description=Atlassian Jira
+After=network.target                                    # требование для загрузки
+	
 [Service]
-Type=forking                                      # задаем тип форкинг, процесс создающий др. процессы
-User=jira                                         # пользователь
-PIDFile=/opt/atlassian/jira/work/catalina.pid     # пид файл
-ExecStart=/opt/atlassian/jira/bin/start-jira.sh   # скрипт запуска приложения
-ExecStop=/opt/atlassian/jira/bin/stop-jira.sh     # скрипт остановки приложения
-MemoryLimit=140M                                  # ограничение на использование памяти
-TasksMax=5                                        # максимальноe кол-во активных задач 5
-Slice=user-1000.slice                             # назначение слайса, необходимо писать наименование конечного слайса без ветки
-Restart=always                                    # авторестарт
-
+Type=forking                                            # тип service'а 
+User=jira
+PIDFile=/opt/atlassian/jira/work/catalina.pid           
+ExecStart=/opt/atlassian/jira/bin/start-jira.sh           
+ExecStop=/opt/atlassian/jira/bin/stop-jira.sh           
+MemoryLimit=140M                                        # лимит памяти для юнита
+TasksMax=20                                             # лимит тасков для юнита
+Slice=user-1000.slice                                   # установка slice для юнита
+Restart=always                                          # рестарт юнита, в случае некорректного завершения его работы
+                                                        # отличной от systemctl stop [service]
 [Install]
-WantedBy=multi-user.target                        # вхождение данного серсвиса в группу таргетов
+WantedBy=multi-user.target
+EOF
+	}
+          
+	ln_service(){
+		src19=/lib/systemd/system/jira.service
+		op19=/etc/systemd/system/multi-user.target.wants/
+		ln -s $src19 $op19                                 # создание симлинков для автостарта jira.service
+	}
+        
+	QUEST3(){                                            # вызов функций в определённом порядке
+		INST_WGET
+		SRV_JIRA
+		ln_service
+		systemctl start jira		
+		systemctl set-property \                           # ограничение использования юнитом процессора
+			jira.service \
+			CPUQuota=40%  
+	} 	
+QUEST3                                                 # запуск функции 
+telinit 6                                              # рестарт системы
+
 ```
-дополнительно установим ограничение на использование процессора, данное ограничение останется активным и после перезагрузки VM
-```  
-systemctl set-property jira.service CPUQuota=40%   
-```
-далее создаем линк для организации автозагрузки юнита
-```
-ln -s /lib/systemd/system/jira.service /etc/systemd/system/multi-user.target.wants/
-```
-По ограничению и рестарту сервисов всё, можно грузить и проверять работу служб.
