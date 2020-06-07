@@ -18,3 +18,9 @@ Advanced
 7. systemd [[RUS]](http://www2.kangran.su/~nnz/pub/s4a/s4a_latest.pdf)  
 8. управление системными ресурсами RHEL [[RUS]](https://access.redhat.com/documentation/ru-ru/red_hat_enterprise_linux/6/html-single/resource_management_guide/index)   
 9. resource RHEL [[EN]](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/resource_management_guide/sec-modifying_control_groups)  
+10. [resource-control](https://www.freedesktop.org/software/systemd/man/systemd.resource-control.html)  
+```
+[Service]
+MemoryMax=1G
+Restart=on-abnormal
+```
